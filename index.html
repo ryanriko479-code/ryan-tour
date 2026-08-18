@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryan Tours</title>
+
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- styles: tokens first, then utilities, then one file per component -->
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/utilities/buttons.css">
+<link rel="stylesheet" href="styles/components/header.css">
+<link rel="stylesheet" href="styles/components/hero.css">
+<link rel="stylesheet" href="styles/components/card.css">
+<link rel="stylesheet" href="styles/components/shared-modal.css">
+<link rel="stylesheet" href="styles/components/booking.css">
+<link rel="stylesheet" href="styles/components/dashboard.css">
+<link rel="stylesheet" href="styles/components/footer.css">
+</head>
+<body>
+  <div class="topo-layer"></div>
+  <div class="sun-glow"></div>
+
+  <div id="app"></div>
+  <div id="modal-root"></div>
+  <div id="toast-root"></div>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

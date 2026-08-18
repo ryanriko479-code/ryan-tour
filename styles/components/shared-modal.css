@@ -1,0 +1,16 @@
+/* ==========================================================
+   SHARED MODAL — modal overlay, gallery view, toast notifications
+   ========================================================== */
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(4px); z-index: 150;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-box { max-width: 560px; width: 100%; padding: 30px; max-height: 85vh; overflow-y: auto; position: relative; }
+.close-x { position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; border-radius: 8px; background: var(--glass); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; }
+
+.toast {
+  position: fixed; bottom: 26px; right: 26px; z-index: 200; padding: 14px 20px; display: flex; align-items: center; gap: 10px;
+  transform: translateY(20px); opacity: 0; transition: all .3s ease; pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }

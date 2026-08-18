@@ -1,0 +1,33 @@
+/* ==========================================================
+   DASHBOARD — admin and guest dashboard layouts, tables, stats
+   ========================================================== */
+
+.dash-layout { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: flex-start; }
+.dash-sidebar { padding: 16px; position: sticky; top: 100px; }
+.dash-sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; font-size: 13.5px; color: var(--ink-dim); margin-bottom: 4px; }
+.dash-sidebar a:hover { background: rgba(255, 255, 255, 0.05); color: var(--ink); }
+.dash-sidebar a.active { background: var(--glass-strong); color: var(--ink); border: 1px solid var(--glass-border); }
+
+.stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 26px; }
+.stat-card { padding: 18px 20px; }
+.stat-card .num { font-family: var(--font-mono); font-size: 26px; color: var(--gold-soft); }
+.stat-card .lbl { font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+.stat-card .delta { font-size: 11px; color: var(--ok); margin-top: 6px; font-family: var(--font-mono); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th { text-align: left; padding: 10px 14px; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-faint); border-bottom: 1px solid var(--glass-border); }
+td { padding: 13px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: var(--ink-dim); }
+tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+.status-badge { padding: 4px 10px; border-radius: 7px; font-size: 11px; font-family: var(--font-mono); }
+.status-pending { background: rgba(211, 163, 92, 0.14); color: var(--gold-soft); }
+.status-confirmed { background: rgba(113, 146, 111, 0.16); color: #a9c4a6; }
+.status-cancelled { background: rgba(193, 89, 79, 0.14); color: #e6a89f; }
+
+@media (max-width: 900px) {
+  .dash-layout { grid-template-columns: 1fr; }
+  .stat-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .stat-cards { grid-template-columns: 1fr 1fr; }
+}

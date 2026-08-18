@@ -1,0 +1,22 @@
+name = "ryan-tours-api"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+# Non-secret config can live here in plain text.
+# Secrets (AIRTABLE_TOKEN, ADMIN_CREDENTIALS, SESSION_SECRET) are set
+# with `wrangler secret put <NAME>` — see README.md — and never
+# appear in this file or in the repo.
+#
+# NOTE ON THE RENAME: `name` above changed from "wild-kenya-safaris-api"
+# to "ryan-tours-api" as part of the Ryan Tours rebrand. Cloudflare
+# treats `name` as the actual Worker's identity — your NEXT
+# `wrangler deploy` will create a brand-new Worker at
+# https://ryan-tours-api.<your-subdomain>.workers.dev rather than
+# updating the one already live at .../wild-kenya-safaris-api.<...>.
+# The old one keeps running as-is until you delete it. When you're
+# ready: deploy under this new name, update the frontend's
+# API_BASE_URL to match, THEN delete "wild-kenya-safaris-api" from
+# the Cloudflare dashboard so you're not paying attention to two
+# copies of the same thing. No action needed right now.
+[vars]
+ALLOWED_ORIGIN = "*"  # tighten to your deployed frontend's origin once it has one, e.g. "https://yourname.github.io"

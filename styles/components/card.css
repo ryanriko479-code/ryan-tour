@@ -1,0 +1,16 @@
+/* ==========================================================
+   CARD — reusable cards (packages, parks, accommodations, bookings)
+   ========================================================== */
+
+.card { overflow: hidden; display: flex; flex-direction: column; transition: transform .2s ease, border-color .2s ease; }
+.card:hover { transform: translateY(-3px); border-color: var(--glass-border-hi); }
+
+.card-img { height: 170px; background-size: cover; background-position: center; position: relative; }
+.card-img .tag { position: absolute; top: 12px; left: 12px; padding: 5px 10px; border-radius: 7px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+.card-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.card-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--glass-border); }
+
+.price { font-family: var(--font-mono); font-size: 16px; color: var(--gold-soft); font-weight: 500; }
+.price small { color: var(--ink-faint); font-size: 11px; }
