@@ -26,12 +26,12 @@ import { renderAdminSettings } from './pages/dashboard/admin-settings.js';
 
 import {
   getUser, isLoggedIn, isGuest, isAdmin,
-  login, loginAsDemoGuest, loginAsDemoAdmin, register, logout,
+  login, loginWithSession, loginAsDemoGuest, register, logout,
 } from './utilities/auth.js';
 import { $, $all, toast } from './utilities/helpers.js';
 import { waLink } from './utilities/channelLinks.js';
 import { calcCustomPricePerPerson, validatePrebuiltBooking, validateCustomBooking } from './utilities/booking.js';
-import { fetchPackages, fetchParks, fetchAddons, createBooking, updateBookingStatus } from './services/dataLoader.js';
+import { fetchPackages, fetchParks, fetchAddons, createBooking, updateBookingStatus, login as apiLogin, ApiError } from './services/dataLoader.js';
 
 /* ---------------- TRANSIENT UI STATE (not persisted) ---------------- */
 
@@ -132,19 +132,40 @@ function wireEvents() {
     const bmode = e.target.closest('[data-booking-mode]');
     if (bmode) { ui.bookingMode = bmode.getAttribute('data-booking-mode'); render(); return; }
 
-    // Auth: demo shortcuts
+    // Auth: guest demo shortcut (no admin equivalent — admin is real login only)
     const quickLogin = e.target.closest('[data-quick-login]');
     if (quickLogin) {
-      const role = quickLogin.getAttribute('data-quick-login');
-      const user = role === 'admin' ? loginAsDemoAdmin() : loginAsDemoGuest();
-      toast(`Logged in as ${user.name} (${role})`);
-      navigate(role === 'admin' ? 'admin' : 'my-bookings');
+      const user = loginAsDemoGuest();
+      toast(`Logged in as ${user.name} (guest)`);
+      navigate('my-bookings');
       return;
     }
 
     if (e.target.id === 'login-submit') {
       const email = $('#login-email').value.trim();
+      const password = $('#login-password').value;
       if (!email) { toast('Enter your email to continue', 'err'); return; }
+
+      // Password present → this is an admin login attempt, verified
+      // server-side against the Worker's hashed admin list. No password
+      // → treat as the existing guest pseudo-login (name derived from
+      // the email, no server round-trip).
+      if (password) {
+        try {
+          const { user, token } = await apiLogin(email, password);
+          loginWithSession(user, token);
+          toast(`Logged in as ${user.name} (admin)`);
+          navigate('admin');
+        } catch (err) {
+          if (err instanceof ApiError && (err.status === 401 || err.status === 403)) {
+            toast('Incorrect email or password', 'err');
+          } else {
+            toast('Login failed — check your connection and try again', 'err');
+          }
+        }
+        return;
+      }
+
       const name = email.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
       login({ name, email, role: 'guest' });
       toast('Logged in successfully');

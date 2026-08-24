@@ -1,48 +1,84 @@
 // ==========================================================
-// auth.js — mock login, in-memory session management, role checks
-// Session lives only in memory (per architecture Phase 1) — it resets
-// on reload. Replace with JWT/token-based auth in Phase 2.
+// auth.js — session state.
+//
+// Guests are a lightweight, CLIENT-SIDE pseudo-login: no password,
+// no server account — just the name/email a visitor types into a
+// booking form, kept around so "My bookings" has something to filter
+// by. This matches how booking.js/register.js already work; nothing
+// here changes that.
+//
+// Admins are real: POST /auth/login on the Worker checks the email
+// + password against a hashed admin list and returns a signed
+// session token (see api.js `login()`). That token is what gates
+// `isAdmin()` — there's no client-side admin shortcut anymore.
+//
+// Session persists in localStorage so a refresh doesn't log you out.
 // ==========================================================
 
-let currentUser = null; // { name, email, role: 'guest' | 'admin' }
+const STORAGE_KEY = 'rt_session';
 
+function readSession() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeSession(session) {
+  try {
+    if (session) localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    else localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // localStorage unavailable (private browsing, etc.) — session just won't persist
+  }
+}
+
+/** @returns {{name:string, email:string, role:'guest'|'admin'}|null} */
 export function getUser() {
-  return currentUser;
+  return readSession()?.user || null;
+}
+
+/** Signed session token from the Worker. Null for guests — they never had one. */
+export function getToken() {
+  return readSession()?.token || null;
 }
 
 export function isLoggedIn() {
-  return currentUser !== null;
+  return !!getUser();
 }
 
 export function isGuest() {
-  return currentUser?.role === 'guest';
+  return getUser()?.role === 'guest';
 }
 
 export function isAdmin() {
-  return currentUser?.role === 'admin';
+  return getUser()?.role === 'admin' && !!getToken();
 }
 
-/**
- * Mock login — in a real backend this would verify credentials against
- * the API. Here any non-empty email logs the guest in.
- */
+/** Client-side guest pseudo-login — no server call, no password. */
 export function login({ name, email, role = 'guest' }) {
-  currentUser = { name, email, role };
-  return currentUser;
+  const user = { name, email, role };
+  writeSession({ user, token: null });
+  return user;
+}
+
+/** Call after a successful POST /auth/login — stores the real admin session. */
+export function loginWithSession(user, token) {
+  writeSession({ user, token });
+  return user;
 }
 
 export function loginAsDemoGuest() {
-  return login({ name: 'Sarah Mwangi', email: 'sarah@example.com', role: 'guest' });
+  return login({ name: 'Demo Guest', email: 'demo.guest@example.com', role: 'guest' });
 }
 
-export function loginAsDemoAdmin() {
-  return login({ name: 'Admin User', email: 'admin@ryantours.com', role: 'admin' });
-}
-
+/** Guest self-registration — same as login(), no server account (yet). */
 export function register({ name, email }) {
   return login({ name, email, role: 'guest' });
 }
 
 export function logout() {
-  currentUser = null;
+  writeSession(null);
 }

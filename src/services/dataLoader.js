@@ -9,6 +9,8 @@
 // ==========================================================
 
 export {
+  ApiError,
+  login,
   fetchParks,
   fetchPark,
   fetchAccommodations,

@@ -17,7 +17,7 @@
 // TODO: point this at your deployed Worker once it exists, e.g.
 // 'https://ryan-tours-api.<your-subdomain>.workers.dev/api/v1'.
 // Defaults to a local `wrangler dev` server for now.
-const API_BASE_URL = 'https://wild-kenya-safaris-api.ryantours.workers.dev/';
+const API_BASE_URL = 'https://wild-kenya-safaris-api.ryantours.workers.dev/api/v1';
 
 class ApiError extends Error {
   constructor(message, status) {
@@ -112,6 +112,19 @@ export async function fetchAddons() {
 
 export async function fetchReviews({ parkId } = {}) {
   return request('/reviews', { params: { parkId } });
+}
+
+/* ---------------- Auth ---------------- */
+
+/**
+ * Admin login only — guests never hit this endpoint, they stay on the
+ * client-side pseudo-login in utilities/auth.js. The Worker responds
+ * with { user: { name, email, role }, token } (confirmed against
+ * worker/src/auth.js's loginAdmin()). ApiError (401) bubbles up on
+ * bad credentials.
+ */
+export async function login(email, password) {
+  return request('/auth/login', { method: 'POST', body: { email, password } });
 }
 
 /* ---------------- Bookings ---------------- */
