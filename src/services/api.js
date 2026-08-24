@@ -17,7 +17,7 @@
 // TODO: point this at your deployed Worker once it exists, e.g.
 // 'https://ryan-tours-api.<your-subdomain>.workers.dev/api/v1'.
 // Defaults to a local `wrangler dev` server for now.
-const API_BASE_URL = 'http://localhost:8787/api/v1';
+const API_BASE_URL = 'https://wild-kenya-safaris-api.ryantours.workers.dev/';
 
 class ApiError extends Error {
   constructor(message, status) {
