@@ -1,0 +1,16 @@
+# Cloudflare uploads everything under [assets] directory as public,
+# fetchable static files by default. This keeps server-side source,
+# docs, and tooling noise out of that public bundle. Gitignore syntax.
+
+# The Worker's own source — never expose this as a public static file
+worker/
+
+# Internal notes, not part of the shipped site
+docs/
+
+# VCS / editor / tooling
+.git/
+.github/
+node_modules/
+.DS_Store
+*.md

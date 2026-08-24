@@ -1,0 +1,27 @@
+name = "wild-kenya-safaris-api"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+# Non-secret config can live here in plain text.
+# Secrets (AIRTABLE_TOKEN, ADMIN_CREDENTIALS, SESSION_SECRET) are set
+# with `wrangler secret put <NAME>` — see README.md — and never
+# appear in this file or in the repo.
+#
+# NOTE: this project was scaffolded expecting a rename to
+# "ryan-tours-api", but the decision was to keep a single Worker
+# under its original name (wild-kenya-safaris-api) rather than fork
+# into two. `name` is what Cloudflare uses as the Worker's identity —
+# changing it would deploy a brand-new Worker at a different URL
+# instead of updating the one already live. Leave this as-is.
+[vars]
+ALLOWED_ORIGIN = "*"  # same-origin now that assets are served from this Worker too — tighten later if you want to block other sites from calling the API directly
+
+# Frontend and API are served from this ONE Worker. "../" is the repo
+# root relative to this file (worker/wrangler.toml → up one level to
+# index.html, src/, styles/, assets/). Requests matching a real file
+# are served directly by Cloudflare; anything else (like /api/v1/*)
+# falls through to src/index.js's fetch handler untouched — no Worker
+# code changes needed for this to work.
+[assets]
+directory = "../"
+binding = "ASSETS"

@@ -17,7 +17,7 @@
 // TODO: point this at your deployed Worker once it exists, e.g.
 // 'https://ryan-tours-api.<your-subdomain>.workers.dev/api/v1'.
 // Defaults to a local `wrangler dev` server for now.
-const API_BASE_URL = 'https://wild-kenya-safaris-api.ryantours.workers.dev/api/v1';
+const API_BASE_URL = '/api/v1';
 
 class ApiError extends Error {
   constructor(message, status) {
@@ -33,7 +33,7 @@ class ApiError extends Error {
  * distinguish "not found" from "network down" from "server error".
  */
 async function request(path, { method = 'GET', params, body } = {}) {
-  const url = new URL(API_BASE_URL + path);
+  const url = new URL(API_BASE_URL + path, window.location.origin);
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, value);
